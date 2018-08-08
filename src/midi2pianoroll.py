@@ -12,8 +12,10 @@ def get_tempo(mid):
         if m.is_meta and m.type=='set_tempo':
             return m.tempo
 def midi2pianoroll(flist):
-    fw = open('../note.txt')
-    for midif in (flist.read()).split():
+    fw = open('../note.txt', 'w')
+    flist=open(flist,'r')
+    flist=(flist.read()).split()
+    for midif in flist:
         mid_mido=mido.MidiFile(midif)
         mid_pret=pretty_midi.PrettyMIDI(midif)
         resolution=mid_mido.ticks_per_beat
