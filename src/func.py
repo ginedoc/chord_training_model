@@ -24,7 +24,7 @@ def midi2pianoroll(mid):
     tempo=get_tempo(midd)
     bpm=mido.tempo2bpm(tempo)
     sixteen_t=(1/(bpm/60))/4
-    midi_length=int(midd.length/sixteen_t)
+    midi_length=int(np.ceil(midd.length/sixteen_t))
 
     # 
     notes=np.zeros((midi_length, 13))
@@ -69,6 +69,25 @@ def roll2ration(notes):
     scale=scale/total
     return scale
 
+def load_data(notes, chords):
+    fn = open(notes, 'r')
+    fc = open(chords, 'r')
+    notes = (fn.read()).split('\n')
+    notes = np.array(notes)
+    N=np.zeros((len(notes), 13))
+    for i, note in enumerate(notes):
+        note = note.split()
+        for j, n in enumerate(note):
+            N[i][j]=atof(n)
+            if np.isnan(N[i][j])==True:
+                N[i][j]=0
+    notes = N
+
+    chords=np.array((fc.read()).split())
+    chords=chord2index(chords)    
+
+    return notes, chords
+
 def get_tempo(mid):
     for m in mid:
         if m.is_meta and m.type=='set_tempo':
@@ -77,3 +96,36 @@ def get_tempo(mid):
     if tempo is None:
         tempo=500000
     return tempo
+###
+
+def chord2index(chordlist):
+    chordlabel2num = {
+        'C':0,'B#':0, 'N':0,
+	'C#':1,'Db':1,
+	'D':2,
+	'D#':3,'Eb':3,
+        'E':4,'Fb':4,
+        'F':5,'E#':5,
+	'F#':6,'Gb':6,
+	'G':7,
+	'G#':8,'Ab':8,
+	'A':9,
+	'A#':10,'Bb':10,
+        'B':11,'Cb':11,
+        'C:min':12,'B#:min':12,
+        'C#:min':13,'Db:min':13,
+        'D:min':14,
+        'D#:min':15,'Eb:min':15,
+        'E:min':16,'Fb:min':16,
+        'F:min':17,'E#:min':17,
+        'F#:min':18,'Gb:min':18,
+        'G:min':19,
+        'G#:min':20,'Ab:min':20,
+        'A:min':21,
+        'A#:min':22,'Bb:min':22,
+        'B:min':23,'Cb:min':23,
+        'N':24
+	}
+    for i, chord in enumerate(chordlist):
+        chordlist[i]=chordlabel2num[chord]
+    return chordlist

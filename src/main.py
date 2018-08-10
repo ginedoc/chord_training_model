@@ -1,5 +1,6 @@
 from func import midi2mp3, midi2pianoroll, ratio_train_data, ace_info
 import glob
+import numpy as np
 
 if __name__ == "__main__":
     
@@ -16,10 +17,12 @@ if __name__ == "__main__":
 
         for seg in ratio:
             for n in seg:
-                fn.write(str(n)+',')
+                if np.isnan(n)==True:
+                    n=0
+                fn.write(str(n)+' ')
             fn.write('\n')
 
         for c in c_arr:
-            fc.write(str(c)+',\n')
+            fc.write(str(c)+'\n')
     fn.close()
     fc.close()
