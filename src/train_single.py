@@ -38,7 +38,7 @@ model.compile(optimizer=rmsprop,
             metrics=['accuracy'])
 #
 print('\nTraining....')
-model.fit(x_train, y_train, epochs=100, batch_size=10)
+model.fit(x_train, y_train, epochs=20, batch_size=10)
 
 #
 print('\nTesting.....')
@@ -46,5 +46,5 @@ loss, accuracy = model.evaluate(x_test, y_test)
 
 print('test loss:', loss)
 print('test accuracy:', accuracy)
-model.save('model_single.h5')
+model.save('model_single_classical.h5')
 

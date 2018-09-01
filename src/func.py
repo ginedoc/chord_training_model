@@ -32,12 +32,16 @@ def midi2pianoroll(mid):
         print(instrument)
         if instrument.is_drum==False:
             pr = instrument.get_piano_roll(1/sixteen_t)
+            cnt = 0
             for i, ppr in enumerate(pr):
+                # i: notes
+                # j: time stamp
                 for j, nt in enumerate(ppr):
                     if nt>0:
                         notes[j][i%12+1] += 1
-                    else:       # note off
-                        notes[j][0] += 1
+    for i, note in enumerate(notes):
+        if np.count_nonzero(note) == 0:
+            notes[i][0] = 1               
     return notes, sixteen_t
 
 def ace_info(src):
